@@ -7,7 +7,6 @@ import (
 	"github.com/sensu/sensu-go/backend/apid/graphql/globalid"
 	"github.com/sensu/sensu-go/backend/apid/graphql/schema"
 	"github.com/sensu/sensu-go/graphql"
-	"github.com/sensu/sensu-go/types"
 )
 
 var _ schema.SilencedFieldResolvers = (*silencedImpl)(nil)
@@ -23,13 +22,13 @@ type silencedImpl struct {
 
 // Begin implements response to request for 'begin' field.
 func (r *silencedImpl) Begin(p graphql.ResolveParams) (*time.Time, error) {
-	s := p.Source.(*types.Silenced)
+	s := p.Source.(*v2.Silenced)
 	return convertTs(s.Begin), nil
 }
 
 // Check implements response to request for 'check' field.
 func (r *silencedImpl) Check(p graphql.ResolveParams) (interface{}, error) {
-	src := p.Source.(*types.Silenced)
+	src := p.Source.(*v2.Silenced)
 	ctx := contextWithNamespace(p.Context, src.Namespace)
 
 	client := r.factory.NewWithContext(ctx)
@@ -39,7 +38,7 @@ func (r *silencedImpl) Check(p graphql.ResolveParams) (interface{}, error) {
 
 // Expires implements response to request for 'expires' field.
 func (r *silencedImpl) Expires(p graphql.ResolveParams) (*time.Time, error) {
-	s := p.Source.(*types.Silenced)
+	s := p.Source.(*v2.Silenced)
 	if s.Expire > 0 {
 		return convertTs(s.Begin + s.Expire), nil
 	}
@@ -53,5 +52,5 @@ func (r *silencedImpl) ID(p graphql.ResolveParams) (string, error) {
 
 // ToJSON implements response to request for 'toJSON' field.
 func (r *silencedImpl) ToJSON(p graphql.ResolveParams) (interface{}, error) {
-	return types.WrapResource(p.Source.(v2.Resource)), nil
+	return v2.WrapResource(p.Source.(v2.Resource)), nil
 }

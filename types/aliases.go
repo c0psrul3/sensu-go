@@ -50,6 +50,7 @@ type (
 	Tokens              = v2.Tokens
 	TypeMeta            = v2.TypeMeta
 	User                = v2.User
+	Wrapper             = v2.Wrapper
 )
 
 type (
@@ -254,4 +255,6 @@ var (
 	EventsByLastOk              = v2.EventsByLastOk
 	EventFilterAllActions       = v2.EventFilterAllActions
 	ValidateOutputMetricFormat  = v2.ValidateOutputMetricFormat
+	WrapResource                = v2.WrapResource
+	RegisterTypeResolver        = v2.RegisterTypeResolver
 )

@@ -5,7 +5,6 @@ import (
 	"github.com/sensu/sensu-go/backend/apid/graphql/globalid"
 	"github.com/sensu/sensu-go/backend/apid/graphql/schema"
 	"github.com/sensu/sensu-go/graphql"
-	"github.com/sensu/sensu-go/types"
 	"github.com/sensu/sensu-go/util/strings"
 )
 
@@ -28,8 +27,8 @@ func (*handlerImpl) ID(p graphql.ResolveParams) (string, error) {
 
 // Mutator implements response to request for 'mutator' field.
 func (r *handlerImpl) Mutator(p graphql.ResolveParams) (interface{}, error) {
-	src := p.Source.(*types.Handler)
-	ctx := types.SetContextFromResource(p.Context, src)
+	src := p.Source.(*v2.Handler)
+	ctx := v2.SetContextFromResource(p.Context, src)
 
 	client := r.factory.NewWithContext(ctx)
 	res, err := client.FetchMutator(src.Mutator)
@@ -39,9 +38,9 @@ func (r *handlerImpl) Mutator(p graphql.ResolveParams) (interface{}, error) {
 
 // Handlers implements response to request for 'handlers' field.
 func (r *handlerImpl) Handlers(p graphql.ResolveParams) (interface{}, error) {
-	src := p.Source.(*types.Handler)
+	src := p.Source.(*v2.Handler)
 	results, err := loadHandlers(p.Context, src.Namespace)
-	records := filterHandlers(results, func(obj *types.Handler) bool {
+	records := filterHandlers(results, func(obj *v2.Handler) bool {
 		return strings.FoundInArray(obj.Name, src.Handlers)
 	})
 	return records, err
@@ -49,13 +48,13 @@ func (r *handlerImpl) Handlers(p graphql.ResolveParams) (interface{}, error) {
 
 // IsTypeOf is used to determine if a given value is associated with the type
 func (*handlerImpl) IsTypeOf(s interface{}, p graphql.IsTypeOfParams) bool {
-	_, ok := s.(*types.Handler)
+	_, ok := s.(*v2.Handler)
 	return ok
 }
 
 // ToJSON implements response to request for 'toJSON' field.
 func (*handlerImpl) ToJSON(p graphql.ResolveParams) (interface{}, error) {
-	return types.WrapResource(p.Source.(v2.Resource)), nil
+	return v2.WrapResource(p.Source.(v2.Resource)), nil
 }
 
 //
@@ -66,18 +65,18 @@ type handlerSocketImpl struct{}
 
 // Host implements response to request for 'host' field.
 func (*handlerSocketImpl) Host(p graphql.ResolveParams) (string, error) {
-	socket := p.Source.(*types.HandlerSocket)
+	socket := p.Source.(*v2.HandlerSocket)
 	return socket.Host, nil
 }
 
 // Port implements response to request for 'port' field.
 func (*handlerSocketImpl) Port(p graphql.ResolveParams) (int, error) {
-	socket := p.Source.(*types.HandlerSocket)
+	socket := p.Source.(*v2.HandlerSocket)
 	return int(socket.Port), nil
 }
 
 // IsTypeOf is used to determine if a given value is associated with the type
 func (*handlerSocketImpl) IsTypeOf(s interface{}, p graphql.IsTypeOfParams) bool {
-	_, ok := s.(*types.HandlerSocket)
+	_, ok := s.(*v2.HandlerSocket)
 	return ok
 }

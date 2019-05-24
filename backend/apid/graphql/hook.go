@@ -5,7 +5,6 @@ import (
 	"github.com/sensu/sensu-go/backend/apid/graphql/globalid"
 	"github.com/sensu/sensu-go/backend/apid/graphql/schema"
 	"github.com/sensu/sensu-go/graphql"
-	"github.com/sensu/sensu-go/types"
 )
 
 var _ schema.HookFieldResolvers = (*hookImpl)(nil)
@@ -22,7 +21,7 @@ type hookImpl struct {
 
 // IsTypeOf is used to determine if a given value is associated with the type
 func (*hookImpl) IsTypeOf(s interface{}, p graphql.IsTypeOfParams) bool {
-	_, ok := s.(*types.Hook)
+	_, ok := s.(*v2.Hook)
 	return ok
 }
 
@@ -41,13 +40,13 @@ func (*hookCfgImpl) ID(p graphql.ResolveParams) (string, error) {
 
 // IsTypeOf is used to determine if a given value is associated with the type
 func (*hookCfgImpl) IsTypeOf(s interface{}, p graphql.IsTypeOfParams) bool {
-	_, ok := s.(*types.HookConfig)
+	_, ok := s.(*v2.HookConfig)
 	return ok
 }
 
 // ToJSON implements response to request for 'toJSON' field.
 func (*hookCfgImpl) ToJSON(p graphql.ResolveParams) (interface{}, error) {
-	return types.WrapResource(p.Source.(v2.Resource)), nil
+	return v2.WrapResource(p.Source.(v2.Resource)), nil
 }
 
 //
@@ -58,18 +57,18 @@ type hookListImpl struct{}
 
 // Hooks implements response to request for 'config' field.
 func (*hookListImpl) Hooks(p graphql.ResolveParams) ([]string, error) {
-	l, _ := p.Source.(types.HookList)
+	l, _ := p.Source.(v2.HookList)
 	return l.Hooks, nil
 }
 
 // Type implements response to request for 'type' field.
 func (*hookListImpl) Type(p graphql.ResolveParams) (string, error) {
-	l, _ := p.Source.(types.HookList)
+	l, _ := p.Source.(v2.HookList)
 	return l.Type, nil
 }
 
 // IsTypeOf is used to determine if a given value is associated with the type
 func (*hookListImpl) IsTypeOf(s interface{}, p graphql.IsTypeOfParams) bool {
-	_, ok := s.(types.HookList)
+	_, ok := s.(v2.HookList)
 	return ok
 }

@@ -8,8 +8,6 @@ import (
 	"reflect"
 	"strings"
 	"sync"
-
-	v2 "github.com/sensu/sensu-go/api/core/v2"
 )
 
 // Wrapper is a generic wrapper, with a type field for distinguishing its
@@ -31,7 +29,7 @@ type rawWrapper struct {
 
 // PackageMap contains a list of packages with their Resource Resolver func
 var packageMap = map[string]func(string) (Resource, error){
-	"core/v2": v2.ResolveResource,
+	"core/v2": ResolveResource,
 }
 
 var packageMapMu = &sync.RWMutex{}
